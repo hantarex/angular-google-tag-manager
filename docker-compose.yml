@@ -1,0 +1,23 @@
+version: "3"
+services:
+
+  my-carousel:
+    restart: always
+    build:
+      context: ./
+      dockerfile: local.Dockerfile
+    container_name: angular-google-tag-manager
+    working_dir: /application
+#    command: /bin/bash -c "npm i && npm run serve"
+    command: /bin/bash -c "tail -f > /dev/null"
+    volumes:
+      - ./:/application/
+    networks:
+        - angular-google-tag-manager
+
+networks:
+  angular-google-tag-manager:
+        driver: bridge
+        ipam:
+            config:
+                -   subnet: 11.26.0.0/16
