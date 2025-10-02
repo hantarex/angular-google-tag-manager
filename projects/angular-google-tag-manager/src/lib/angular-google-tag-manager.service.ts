@@ -93,28 +93,28 @@ export class GoogleTagManagerService {
       const gtmScript = doc.createElement('script');
       gtmScript.id = 'GTMscript';
       gtmScript.async = true;
-      const scriptBody = doc.createTextNode(`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;var n=d.querySelector('[nonce]');
-n&&j.setAttribute('nonce',n.nonce||n.getAttribute('nonce'));f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','${this.config.id}');`);
-      gtmScript.appendChild(scriptBody);
-      // gtmScript.src = this.applyGtmQueryParams(
-      //   this.config.gtm_resource_path
-      //     ? this.config.gtm_resource_path
-      //     : 'https://www.googletagmanager.com/gtm.js'
-      // );
+//       const scriptBody = doc.createTextNode(`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+// new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+// j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.id='GTMscript_loaded';j.src=
+// 'https://www.googletagmanager.com/gtm.js?id='+i+dl;var n=d.querySelector('[nonce]');
+// n&&j.setAttribute('nonce',n.nonce||n.getAttribute('nonce'));f.parentNode.insertBefore(j,f);
+// })(window,document,'script','dataLayer','${this.config.id}');`);
+//       gtmScript.appendChild(scriptBody);
+      gtmScript.src = this.applyGtmQueryParams(
+        this.config.gtm_resource_path
+          ? this.config.gtm_resource_path
+          : `https://www.googletagmanager.com/gtm.js?id=${this.config.id}`
+      );
+      const n=doc.querySelector('[nonce]');
+      n&&gtmScript.setAttribute('nonce',n.nonce||n.getAttribute('nonce'))
       gtmScript.addEventListener('load', () => {
         return resolve((this.isLoaded = true));
       });
       gtmScript.addEventListener('error', () => {
         return reject(false);
       });
-      if (this.googleTagManagerCSPNonce) {
-        gtmScript.setAttribute('nonce', this.googleTagManagerCSPNonce);
-      }
       doc.head.insertBefore(gtmScript, doc.head.firstChild);
+
     });
   }
 
